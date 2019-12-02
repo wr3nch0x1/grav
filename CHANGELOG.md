@@ -1,3 +1,35 @@
+# v1.6.18
+## 12/02/2019
+
+1. [](#bugfix)
+    * PHP 7.4 fix in `Pages::buildSort()`
+    * Updated vendor libraries for PHP 7.4 fixes in Twig and other libraries
+    * Fixed fatal error when `$page->id()` is null [#2731](https://github.com/getgrav/grav/pull/2731)
+    * Fixed cache conflicts on pages with no set id
+    * Fix rewrite rule for for `lighttpd` default config [#721](https://github.com/getgrav/grav/pull/2721)
+
+# v1.6.17
+## 11/06/2019
+
+1. [](#new)
+    * Added working ETag (304 Not Modified) support based on the final rendered HTML
+1. [](#improved)
+    * Safer file handling + customizable null char replacement in `CsvFormatter::decode()`
+    * Change of Behavior: `Inflector::hyphenize` will now automatically trim dashes at beginning and end of a string.
+    * Change in Behavior for `Folder::all()` so no longer fails if trying to copy non-existent dot file [#2581](https://github.com/getgrav/grav/pull/2581)
+    * renamed composer `test-plugins` script to `phpstan-plugins` to be more explicit [#2637](https://github.com/getgrav/grav/pull/2637)
+1. [](#bugfix)
+    * Fixed PHP 7.1 bug in FlexMedia
+    * Fix cache image generation when using cropResize [#2639](https://github.com/getgrav/grav/pull/2639)
+    * Fix `array_merge()` exception with non-array page header metadata [#2701](https://github.com/getgrav/grav/pull/2701)
+
+# v1.6.16
+## 09/19/2019
+
+1. [](#bugfix)
+    * Fixed Flex user creation if file storage is being used [#2444](https://github.com/getgrav/grav/issues/2444)
+    * Fixed `Badly encoded JSON data` warning when uploading files [#2663](https://github.com/getgrav/grav/issues/2663)
+
 # v1.6.15
 ## 08/20/2019
 
