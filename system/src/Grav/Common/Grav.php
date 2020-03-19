@@ -171,6 +171,29 @@ class Grav extends Container
     }
 
     /**
+     * Initialize CLI environment.
+     *
+     * Call after `$grav->setup($environment)`
+     *
+     * - Load configuration
+     * - Disable debugger
+     * - Set timezone, locale
+     * - Load plugins
+     * - Set Users type to be used in the site
+     *
+     * This method WILL NOT initialize assets, twig or pages.
+     *
+     * @param string|null $environment
+     * @return $this
+     */
+    public function initializeCli()
+    {
+        InitializeProcessor::initializeCli($this);
+
+        return $this;
+    }
+
+    /**
      * Process a request
      */
     public function process()
@@ -293,7 +316,10 @@ class Grav extends Container
         /** @var Uri $uri */
         $uri = $this['uri'];
 
-        //Check for code in route
+        // Clean route for redirect
+        $route = preg_replace("#^\/[\\\/]+\/#", '/', $route);
+
+         // Check for code in route
         $regex = '/.*(\[(30[1-7])\])$/';
         preg_match($regex, $route, $matches);
         if ($matches) {
@@ -439,11 +465,16 @@ class Grav extends Container
      * Used to call closures.
      *
      * Source: http://stackoverflow.com/questions/419804/closures-as-class-members
+     *
+     * @param string $method
+     * @param array $args
+     * @return
      */
     public function __call($method, $args)
     {
-        $closure = $this->{$method};
-        \call_user_func_array($closure, $args);
+        $closure = $this->{$method} ?? null;
+
+        return is_callable($closure) ? $closure(...$args) : null;
     }
 
     /**
