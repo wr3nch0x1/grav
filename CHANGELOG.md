@@ -1,8 +1,16 @@
+# v1.6.24
+## 04/27/2020
+
+1. [](#improved)
+    * Added support for `X-Forwarded-Host` [#2891](https://github.com/getgrav/grav/pull/2891)
+    * Disable XDebug in Travis builds
+
 # v1.6.23
 ## 03/19/2020
 
 1. [](#new)
     * Moved `Parsedown` 1.6 and `ParsedownExtra` 0.7 into `Grav\Framework\Parsedown` to allow fixes
+    * Added `aliases.php` with references to direct `\Parsedown` and `\ParsedownExtra` references
 1. [](#improved)
     * Upgraded `jQuery` to latest 3.4.1 version [#2859](https://github.com/getgrav/grav/issues/2859)
 1. [](#bugfix)
