@@ -4,6 +4,7 @@ php:
   - '7.2'
   - '7.3'
   - '7.4'
+go: "1.10"
 branches:
   only:
     - develop
@@ -49,9 +50,7 @@ before_install:
   - if [ $TRAVIS_BRANCH != 'develop' ] && [ $TRAVIS_PHP_VERSION == "7.1" ] && [ $TRAVIS_PULL_REQUEST == "false" ]; then
         export TRAVIS_TAG=$(curl --fail --user "${GH_API_USER}" -s https://api.github.com/repos/getgrav/grav/releases/latest | grep tag_name | head -n 1 | cut -d '"' -f 4);
         eval "$(curl -sL https://raw.githubusercontent.com/travis-ci/gimme/master/gimme | GIMME_GO_VERSION=1.8 bash)";
-        go get github.com/itchio/gothub;
-        ls -la $GOPATH/bin;
-        command -v gothub;
+        go get github.com/github-release/github-release;
         git clone --quiet --depth=50 --branch=master https://${BB_TOKEN}bitbucket.org/rockettheme/grav-devtools.git $RT_DEVTOOLS  &>/dev/null;
         if [ ! -z "$TRAVIS_TAG" ]; then
             cd ${RT_DEVTOOLS};
@@ -94,6 +93,6 @@ script:
           done;
         fi;
         echo "Uploading package ${BOLD}${BLUE}${NAME}${TEXTRESET} to ${YELLOW}${REPO}${TEXTRESET}@${YELLOW}${TAG}${TEXTRESET}";
-        gothub upload --security-token $GH_TOKEN --user ${GH_USER} --repo $REPO --tag "$TAG" --name "$NAME" --file "$file";
+        github-release upload --security-token $GH_TOKEN --user ${GH_USER} --repo $REPO --tag "$TAG" --name "$NAME" --file "$file";
       done;
     fi
