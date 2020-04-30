@@ -49,3 +49,4 @@
 * Force rebuild of 1.4.6
 * Force rebuild of 1.4.5 after pulling 1.4.6
 * Force rebuild to pickup clean update
+* Force rebuild for 3.3.0 of login plugin
