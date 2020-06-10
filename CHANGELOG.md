@@ -1,3 +1,21 @@
+# v1.6.26
+## 06/08/2020
+
+1. [](#improved)
+    * Added new configuration option to control the supported attributes in markdown links [#2882](https://github.com/getgrav/grav/issues/2882)
+1. [](#bugfix)
+    * Fixed blueprint for `system.pages.hide_empty_folders` [#1925](https://github.com/getgrav/grav/issues/2925)
+    * JSON Route of homepage with no ‘route’ set is valid
+    * Fix case-insensitive search of location header [form#425](https://github.com/getgrav/grav-plugin-form/issues/425)
+
+# v1.6.25
+## 05/14/2020
+
+1. [](#improved)
+    * Added system configuration support for `HTTP_X_Forwarded` headers (host disabled by default)
+    * Updated `PHPUserAgentParser` to 1.0.0
+    * Bump `Go` to version 1.13 in `travis.yaml`
+
 # v1.6.24
 ## 04/27/2020
 
