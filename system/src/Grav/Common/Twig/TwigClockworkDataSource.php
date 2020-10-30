@@ -11,7 +11,7 @@ namespace Grav\Common\Twig;
 
 use Clockwork\DataSource\DataSource;
 use Clockwork\Request\Request;
-use Clockwork\Request\Timeline;
+use Clockwork\Request\Timeline\Timeline;
 use Grav\Common\Grav;
 
 /**
@@ -43,9 +43,9 @@ class TwigClockworkDataSource extends DataSource
 
         if ($profile) {
             $processor = new TwigProfileProcessor();
-
             $processor->process($profile, $this->views);
-            $request->viewsData    = $this->views->finalize();
+
+            $request->viewsData = $this->views->finalize();
         }
 
         return $request;

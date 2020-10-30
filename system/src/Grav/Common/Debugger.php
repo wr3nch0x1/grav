@@ -164,14 +164,28 @@ class Debugger
 
                 $clockwork->addDataSource(new TwigClockworkDataSource());
 
-                $timeLine = $clockwork->getTimeline();
                 if ($this->requestTime !== GRAV_REQUEST_TIME) {
-                    $timeLine->addEvent('server', 'Server', $this->requestTime, GRAV_REQUEST_TIME);
+                    $data = [
+                        'name' => 'server',
+                        'start' => $this->requestTime,
+                        'end' => GRAV_REQUEST_TIME
+                    ];
+                    $clockwork->event('Server', $data);
                 }
                 if ($this->currentTime !== GRAV_REQUEST_TIME) {
-                    $timeLine->addEvent('loading', 'Loading', GRAV_REQUEST_TIME, $this->currentTime);
+                    $data = [
+                        'name' => 'loading',
+                        'start' => GRAV_REQUEST_TIME,
+                        'end' => $this->currentTime
+                    ];
+                    $clockwork->event('Loading', $data);
                 }
-                $timeLine->addEvent('setup', 'Site Setup', $this->currentTime, microtime(true));
+                $data = [
+                    'name' => 'setup',
+                    'start' => $this->currentTime,
+                    'end' => microtime(true)
+                ];
+                $clockwork->event('Site Setup', $data);
             }
 
             if ($this->censored) {
@@ -204,9 +218,9 @@ class Debugger
             $this->config->debug();
 
             if ($clockwork) {
-                $clockwork->info('System Configuration', $censored ?? $this->config->get('system'));
-                $clockwork->info('Plugins Configuration', $censored ?? $plugins_config);
-                $clockwork->info('Streams', $this->config->get('streams.schemes'));
+                $clockwork->log('info', 'System Configuration', $censored ?? $this->config->get('system'));
+                $clockwork->log('info', 'Plugins Configuration', $censored ?? $plugins_config);
+                $clockwork->log('info', 'Streams', $this->config->get('streams.schemes'));
             }
         }
 
@@ -226,7 +240,7 @@ class Debugger
             }
 
             /** @var UserData $userData */
-            $userData = $this->clockwork->userData('Deprecated');
+            $userData = $this->clockwork->getRequest()->userData('Deprecated');
             $userData->counters([
                 'Deprecated' => count($deprecations)
             ]);
@@ -253,7 +267,7 @@ class Debugger
 
         $this->finalize();
 
-        $clockwork->getTimeline()->finalize($request->getAttribute('request_time'));
+        $clockwork->timeline()->finalize($request->getAttribute('request_time'));
 
         if ($this->censored) {
             $censored = 'CENSORED';
@@ -344,7 +358,7 @@ class Debugger
         }
 
         $nowTime = microtime(true);
-        $clkTimeLine = $this->clockwork ? $this->clockwork->getTimeline() : null;
+        $clkTimeLine = $this->clockwork ? $this->clockwork->timeline() : null;
         $debTimeLine = $this->debugbar ? $this->debugbar['time'] : null;
         foreach ($this->timers as $name => $data) {
             $description = $data[0];
@@ -355,7 +369,12 @@ class Debugger
             }
 
             if ($clkTimeLine) {
-                $clkTimeLine->addEvent($name, $description ?? $name, $startTime, $endTime);
+                $data = [
+                    'name' => $name,
+                    'start' => $startTime,
+                    'end' => $endTime,
+                ];
+                $clkTimeLine->event($description ?? $name, $data);
             }
 
             if ($debTimeLine) {
@@ -577,7 +596,7 @@ class Debugger
 
                 if ($this->clockwork) {
                     /** @var UserData $userData */
-                    $userData = $this->clockwork->userData('Profiler');
+                    $userData = $this->clockwork->getRequest()->userData('Profiler');
                     $userData->counters([
                         'Calls' => count($timings)
                     ]);
@@ -732,7 +751,7 @@ class Debugger
             if ($this->clockwork) {
                 if (!is_scalar($message)) {
                     $isString = $message;
-                    $message = '';
+                    $message = is_object($message) ? get_class($message): gettype($message);
                 }
                 if (is_bool($isString)) {
                     $isString = [];
@@ -741,6 +760,7 @@ class Debugger
                     $type = gettype($isString);
                     $isString = [$type => $isString];
                 }
+
                 $this->clockwork->log($label, $message, $isString);
             }
         }
@@ -790,10 +810,10 @@ class Debugger
 
             if ($this->clockwork) {
                 /** @var UserData $exceptions */
-                $exceptions = $this->clockwork->userData('Exceptions');
+                $exceptions = $this->clockwork->getRequest()->userData('Exceptions');
                 $exceptions->data(['message' => $e->getMessage()]);
 
-                $this->clockwork->alert($e->getMessage(), ['exception' => $e]);
+                $this->clockwork->log('alert', $e->getMessage(), ['exception' => $e]);
             }
         }
 

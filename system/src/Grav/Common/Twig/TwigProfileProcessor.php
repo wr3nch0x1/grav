@@ -9,9 +9,9 @@
 
 namespace Grav\Common\Twig;
 
+use Clockwork\Request\Timeline\Timeline;
 use Grav\Common\Utils;
 use Twig\Profiler\Profile;
-use Clockwork\Request\Timeline;
 
 /**
  * Class TwigProfileProcessor
@@ -44,6 +44,15 @@ class TwigProfileProcessor
             $prefix .= '⎯⎯';
         }
 
+        // Hack to get start and end times from the profile entry.
+        $serialized = $profile->__serialize();
+        $start = $serialized[3]['wt'] ?? null;
+        $end = $serialized[4]['wt'] ?? null;
+        if (!(is_float($start) && is_float($end))) {
+            $start = 0;
+            $end = $profile->getDuration();
+        }
+
         $percent = $this->root ? $profile->getDuration() / $this->root * 100 : 0;
 
         $data = [
@@ -56,13 +65,14 @@ class TwigProfileProcessor
         }
 
 
-        $views->addEvent(
-            $counter,
-            $profile->getTemplate(),
-            0,
-            $profile->getDuration(),
-            [ 'name' => $name, 'data' => $data ]
-        );
+        $event = [
+            'name' => "twig-{$counter}",
+            'start' => $start,
+            'end' => $end,
+            'data' => ['name' => $name, 'data' => $data]
+        ];
+
+        $views->event($profile->getTemplate(), $event);
 
         $nCount = count($profile->getProfiles());
         foreach ($profile as $i => $p) {
