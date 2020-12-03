@@ -1,3 +1,53 @@
+# v1.6.29
+## 12/02/2020
+
+1. [](#new)
+    * Added basic support for `user/config/versions.yaml`
+1. [](#improved)
+    * Updated bundled JQuery to latest version `3.5.1`
+    * Forward a `sid` to GPM when downloading a premium package via CLI
+    * Better handling of missing repository index [grav-plugin-admin#1916](https://github.com/getgrav/grav-plugin-admin/issues/1916)
+    * Set `grav_cli` as referrer when using `Response` from CLI
+    * Add option for timeout in `self-upgrade` command [#3013](https://github.com/getgrav/grav/pull/3013)
+    * Allow to set SameSite from system.yaml [#3063](https://github.com/getgrav/grav/pull/3063)
+    * Update media.yaml with some MS Office mimetypes [#3070](https://github.com/getgrav/grav/pull/3070)
+1. [](#bugfix)
+    * Fixed hardcoded system folder in blueprints, config and language streams
+    * Added `.htaccess` rule to block attempts to use Twig in the request URL
+    * Fix compatibility with Symfony 4.2 and up. [#3048](https://github.com/getgrav/grav/pull/3048)
+    * Fix failing example custom shceduled job. [#3050](https://github.com/getgrav/grav/pull/3050)
+    * Fix for XSS advisory [GHSA-cvmr-6428-87w9](https://github.com/getgrav/grav/security/advisories/GHSA-cvmr-6428-87w9)
+    * Fix uploads_dangerous_extensions checking [#3060](https://github.com/getgrav/grav/pull/3060)
+    * Remove redundant prefixing of `.` to extension [#3060](https://github.com/getgrav/grav/pull/3060)
+    * Check exact extension in checkFilename utility [#3061](https://github.com/getgrav/grav/pull/3061)
+
+# v1.6.28
+## 10/07/2020
+
+1. [](#new)
+    * Back-ported twig `{% cache %}` tag from Grav 1.7
+    * Back-ported `Utils::fullPath()` helper function from Grav 1.7
+    * Back-ported `{{ svg_image() }}` Twig function from Grav 1.7
+    * Back-ported `Folder::countChildren()` function from Grav 1.7
+1. [](#improved)
+    * Use new `{{ theme_var() }}` enhanced logic from Grav 1.7
+    * Improved `Excerpts` class with fixes and functionality from Grav 1.7
+    * Ensure `onBlueprintCreated()` is initialized first
+    * Do not cache default `404` error page
+    * Composer update of vendor libraries
+    * Switched `Caddyfile` to use new Caddy2 syntax + improved usability
+1. [](#bugfix)
+    * Fixed Referer reference during GPM calls.
+    * Fixed fatal error with toggled lists
+
+# v1.6.27
+## 09/01/2020
+
+1. [](#improved)
+    * Right trim route for safety
+    * Use the proper ellipsis for summary [#2939](https://github.com/getgrav/grav/pull/2939)
+    * Left pad schedule times with zeros [#2921](https://github.com/getgrav/grav/pull/2921)
+
 # v1.6.26
 ## 06/08/2020
 

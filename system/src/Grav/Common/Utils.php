@@ -130,6 +130,28 @@ abstract class Utils
     }
 
     /**
+     * Helper method to find the full path to a file, be it a stream, a relative path, or
+     * already a full path
+     *
+     * @param $path
+     * @return string
+     */
+    public static function fullPath($path)
+    {
+        $locator = Grav::instance()['locator'];
+
+        if ($locator->isStream($path)) {
+            $path = $locator->findResource($path, true);
+        } elseif (!Utils::startsWith($path, GRAV_ROOT)) {
+            $base_url = Grav::instance()['base_url'];
+            $path = GRAV_ROOT . '/' . ltrim(Utils::replaceFirstOccurrence($base_url, '', $path), '/');
+        }
+
+        return $path;
+    }
+
+
+    /**
      * Check if the $haystack string starts with the substring $needle
      *
      * @param  string $haystack
@@ -837,11 +859,7 @@ abstract class Utils
     public static function checkFilename($filename)
     {
         $dangerous_extensions = Grav::instance()['config']->get('security.uploads_dangerous_extensions', []);
-        array_walk($dangerous_extensions, function(&$val) {
-            $val = '.' . $val;
-        });
-
-        $extension = '.' . pathinfo($filename, PATHINFO_EXTENSION);
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
 
         return !(
             // Empty filenames are not allowed.
@@ -850,8 +868,8 @@ abstract class Utils
             || strtr($filename, "\t\v\n\r\0\\/", '_______') !== $filename
             // Filename should not start or end with dot or space.
             || trim($filename, '. ') !== $filename
-            // Filename should not contain .php in it.
-            || static::contains($extension, $dangerous_extensions)
+            // File extension should not be part of configured dangerous extensions
+            || in_array($extension, $dangerous_extensions)
         );
     }
 
