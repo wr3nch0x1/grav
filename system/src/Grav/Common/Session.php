@@ -151,7 +151,7 @@ class Session extends \Grav\Framework\Session\Session
      */
     public function setFlashCookieObject($name, $object, $time = 60)
     {
-        setcookie($name, json_encode($object), time() + $time, '/');
+        setcookie($name, json_encode($object), time() + $time, '/', TRUE);
 
         return $this;
     }
